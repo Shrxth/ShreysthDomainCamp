@@ -1,0 +1,153 @@
+DAY-1
+
+QUESTION-1 : WAP on sum of Natural number Upto N.
+
+Code:
+#include <iostream>
+using namespace std;
+
+int main() 
+    {
+    int  sum = 0;
+
+    
+    // cout << "Enter a positive integer: ";
+    // cin >> n;
+
+    int n = 10;
+    for (int i = 1; i <= n; i++) 
+    {
+        sum += i; 
+    }
+
+  
+    cout << "The sum of natural numbers up to " << n << " is: " << sum << endl;
+
+    return 0;
+}
+
+OUTPUT:
+
+   The sum of natural numbers up to 10 is: 55
+
+
+
+
+QUESTION.2- WAP to check Whether a number Prime or Not..
+
+Code.
+#include <iostream>
+using namespace std;
+
+int main() 
+{
+
+    int n = 12;
+    bool isPrime = true;
+
+    // Input from the user
+    // cout << "Enter a positive integer: ";
+    // cin >> n;
+
+    
+    if (n <= 1) 
+    {
+        isPrime = false;
+    } else 
+    {
+       
+        for (int i = 2; i * i <= n; i++) 
+    {
+            if (n % i == 0) 
+    {
+                isPrime = false;
+                break;
+            }
+        }
+    }
+
+    if (isPrime)
+    {
+        cout << n << " is a prime number." << endl;
+    } else {
+        cout << n << " is not a prime number." << endl;
+    }
+
+    return 0;
+}
+
+OUTPUT:
+
+     12 is not a prime number.
+
+
+QUESTION.3: Print your whole Acedemic Bio data Name , UID , Section Area of interest , Age , Last year CGPA , DOB, Home Town , Aim in Life...
+
+Code.
+
+#include <iostream>
+using namespace std;
+
+int main() 
+    {
+    string name, uid, section, areaOfInterest, dob, homeTown, aimInLife;
+    int age;
+    float lastYearCGPA;
+
+    // Taking user inputs
+    cout << "Enter your name: ";
+    getline(cin, name);
+
+    cout << "Enter your UID: ";
+    getline(cin, uid);
+
+    cout << "Enter your section: ";
+    getline(cin, section);
+
+    cout << "Enter your area of interest: ";
+    getline(cin, areaOfInterest);
+
+    cout << "Enter your age: ";
+    cin >> age;
+
+    cout << "Enter your last year CGPA: ";
+    cin >> lastYearCGPA;
+
+    cin.ignore(); // Clear input buffer
+
+    cout << "Enter your date of birth (DOB): ";
+    getline(cin, dob);
+
+    cout << "Enter your hometown: ";
+    getline(cin, homeTown);
+
+    cout << "Enter your aim in life: ";
+    getline(cin, aimInLife);
+
+    // Using conditional operator to validate inputs
+    cout << "\nAcademic Bio Data:\n";
+    cout << "Name: " << (!name.empty() ? name : "Not Provided") << endl;
+    cout << "UID: " << (!uid.empty() ? uid : "Not Provided") << endl;
+    cout << "Section: " << (!section.empty() ? section : "Not Provided") << endl;
+    cout << "Area of Interest: " << (!areaOfInterest.empty() ? areaOfInterest : "Not Provided") << endl;
+    cout << "Age: " << (age > 0 ? to_string(age) : "Invalid Age") << endl;
+    cout << "Last Year CGPA: " << (lastYearCGPA >= 0.0 ? to_string(lastYearCGPA) : "Invalid CGPA") << endl;
+    cout << "Date of Birth: " << (!dob.empty() ? dob : "Not Provided") << endl;
+    cout << "Home Town: " << (!homeTown.empty() ? homeTown : "Not Provided") << endl;
+    cout << "Aim in Life: " << (!aimInLife.empty() ? aimInLife : "Not Provided") << endl;
+
+    return 0;
+}
+
+OUTPUT:
+
+Academic Bio Data:
+Name: Shreysth
+UID: 23BCS80075
+Section: iot-630
+Area of Interest: CSE
+Age: 20
+Last Year CGPA: 7.58
+Date of Birth: 12/04/2004
+Home Town: Agra
+Aim in Life: software engineer
