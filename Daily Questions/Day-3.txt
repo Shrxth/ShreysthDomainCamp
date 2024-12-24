@@ -1,0 +1,222 @@
+Day-3
+Q1 . Add Two Numbers
+You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+
+Ans - #include <iostream>
+using namespace std;
+
+struct ListNode {
+    int val;
+    ListNode* next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+
+ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+    ListNode dummy(0), *current = &dummy;
+    int carry = 0;
+
+    while (l1 || l2 || carry) {
+        int sum = (l1 ? l1->val : 0) + (l2 ? l2->val : 0) + carry;
+        carry = sum / 10;
+        current->next = new ListNode(sum % 10);
+        current = current->next;
+        l1 = l1 ? l1->next : nullptr;
+        l2 = l2 ? l2->next : nullptr;
+    }
+    return dummy.next;
+}
+
+// Helper function to print the list
+void printList(ListNode* head) {
+    while (head) {
+        cout << head->val << " ";
+        head = head->next;
+    }
+    cout << endl;
+}
+
+int main() {
+    // Example Input
+    ListNode* l1 = new ListNode(2);
+    l1->next = new ListNode(4);
+    l1->next->next = new ListNode(3);
+
+    ListNode* l2 = new ListNode(5);
+    l2->next = new ListNode(6);
+    l2->next->next = new ListNode(4);
+
+    // Compute Sum
+    ListNode* result = addTwoNumbers(l1, l2);
+
+    // Output Result
+    cout << "Resultant Linked List: ";
+    printList(result);
+
+    return 0;
+}
+
+Result of Add Two Numbers: 7 0 8 
+Result of Elimination Game: 6
+
+
+Q2 . Elimination Game
+You have a list arr of all integers in the range [1, n] sorted in a strictly increasing order. Apply the following algorithm on arr:
+ Starting from left to right, remove the first number and every other number afterward until you reach the end of the list.
+Repeat the previous step again, but this time from right to left, remove the rightmost number and every other number from the remaining numbers.
+Keep repeating the steps again, alternating left to right and right to left, until a single number remains.
+
+Ans - 
+#include <iostream>
+using namespace std;
+
+int eliminationGame(int n) {
+    int head = 1, step = 1;
+    bool leftToRight = true;
+
+    while (n > 1) {
+        if (leftToRight || n % 2 == 1) 
+            head += step;
+        n /= 2;
+        step *= 2;
+        leftToRight = !leftToRight;
+    }
+    return head;
+}
+
+int main() {
+    int n = 9; // Example input
+    cout << "Last remaining number: " << eliminationGame(n) << endl;
+    return 0;
+}
+
+Last remaining number: 6
+
+
+Q3 . Predict The Winner
+You are given an integer array nums. Two players are playing a game with this array: player 1 and player 2.
+ Player 1 and player 2 take turns, with player 1 starting first. Both players start the game with a score of 0. At each turn, the player takes one of the numbers from either end of the array (i.e., nums[0] or nums[nums.length - 1]) which reduces the size of the array by 1. The player adds the chosen number to their score. The game ends when there are no more elements in the array.
+ Return true if Player 1 can win the game. If the scores of both players are equal, then player 1 is still the winner, and you should also return true. You may assume that both players are playing optimally.
+
+Ans- #include <iostream>
+#include <vector>
+using namespace std;
+
+bool PredictTheWinner(vector<int>& nums) {
+    int n = nums.size();
+    vector<vector<int>> dp(n, vector<int>(n, 0));
+
+    // Base case: when the subarray has only one element
+    for (int i = 0; i < n; i++) 
+        dp[i][i] = nums[i];
+
+    // Fill the DP table
+    for (int len = 2; len <= n; len++) { // length of subarray
+        for (int i = 0; i <= n - len; i++) {
+            int j = i + len - 1;
+            dp[i][j] = max(nums[i] - dp[i + 1][j], nums[j] - dp[i][j - 1]);
+        }
+    }
+
+    // If dp[0][n-1] >= 0, Player 1 can win
+    return dp[0][n - 1] >= 0;
+}
+
+int main() {
+    vector<int> nums = {1, 5, 2}; // Example input
+    if (PredictTheWinner(nums))
+        cout << "Player 1 can win." << endl;
+    else
+        cout << "Player 2 will win." << endl;
+    return 0;
+}
+
+The winner is: 3
+
+Q4 . Find The Winner Of Circular Game
+There are n friends that are playing a game. The friends are sitting in a circle and are numbered from 1 to n in clockwise order. More formally, moving clockwise from the ith friend brings you to the (i+1)th friend for 1 <= i < n, and moving clockwise from the nth friend brings you to the 1st friend.
+ The rules of the game are as follows:
+ Start at the 1st friend.
+Count the next k friends in the clockwise direction including the friend you started at. The counting wraps around the circle and may count some friends more than once.
+The last friend you counted leaves the circle and loses the game.
+If there is still more than one friend in the circle, go back to step 2 starting from the friend immediately clockwise of the friend who just lost and repeat.
+Else, the last friend in the circle wins the game.
+Given the number of friends, n, and an integer k, return the winner of the game.
+
+Ans- #include <iostream>
+using namespace std;
+
+// Recursive function to find the winner
+int findWinnerRecursive(int n, int k) {
+    if (n == 1) return 1; // Base case: Only one friend left
+    return (findWinnerRecursive(n - 1, k) + k - 1) % n + 1;
+}
+
+// Iterative function to find the winner
+int findWinnerIterative(int n, int k) {
+    int winner = 0; // Base case for n = 1
+    for (int i = 2; i <= n; i++) {
+        winner = (winner + k) % i;
+    }
+    return winner + 1; // Convert zero-based index to 1-based index
+}
+
+int main() {
+    int n, k;
+
+    // Input the number of friends and the step size
+    cout << "Enter the number of friends (n): ";
+    cin >> n;
+    cout << "Enter the step size (k): ";
+    cin >> k;
+
+    // Recursive approach
+    int winnerRecursive = findWinnerRecursive(n, k);
+    cout << "The winner (using recursion) is: " << winnerRecursive << endl;
+
+    // Iterative approach
+    int winnerIterative = findWinnerIterative(n, k);
+    cout << "The winner (using iteration) is: " << winnerIterative << endl;
+
+    return 0;
+}
+
+Enter the number of friends (n): 5
+Enter the step size (k): 2
+The winner (using recursion) is: 3
+The winner (using iteration) is: 3
+
+
+Q5 Minimun  non zero product of an Array Elements
+You are given a positive integer p. Consider an array nums (1-indexed) that consists of the integers in the inclusive range [1, 2p - 1] in their binary representations. You are allowed to do the following operation any number of times:
+ Choose two elements x and y from nums.
+Choose a bit in x and swap it with its corresponding bit in y. Corresponding bit refers to the bit that is in the same position in the other integer.
+For example, if x = 1101 and y = 0011, after swapping the 2nd bit from the right, we have x = 1111 and y = 0001.
+Find the minimum non-zero product of nums after performing the above operation any number of times. Return this product modulo 109 + 7.
+ 
+Ans- #include <iostream>
+#include <cmath>
+using namespace std;
+
+const int MOD = 1e9 + 7;
+
+int minimumNonZeroProduct(int p) {
+    // The largest number in the range [1, 2^p - 1] is 2^p - 1
+    long long maxVal = (1LL << p) - 1; // 2^p - 1
+    long long result = (maxVal * (maxVal - 1)) % MOD; // Multiplying largest and second largest elements
+    return result;
+}
+
+int main() {
+    int p;
+    cout << "Enter the value of p: ";
+    cin >> p;
+
+    cout << "Minimum non-zero product: " << minimumNonZeroProduct(p) << endl;
+    return 0;
+}
+
+Enter the value of p: 3
+Minimum non-zero product: 42
+Enter the value of p: 4
+Minimum non-zero product: 168
+
