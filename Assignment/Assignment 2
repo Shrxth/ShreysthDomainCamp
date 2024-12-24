@@ -1,0 +1,167 @@
+#include<iostream>
+using namespace std;
+int isAnyoneWinner(int arr[]);
+int findBestNextMove(int arr[]);
+void DisplayBoard(int arr[]);
+
+int main()
+{
+int array[9] = { 0 };
+int player = 1;
+int nextMove = 0;
+cout << endl << "Who is first player to start? ( pls enter 1 for Computer[X], 2 for Human-Being[O]) = ";
+cin >> player;
+
+if (player != 1 && player != 2)
+{
+    player = 1;
+    cout << endl << "You entered wrong number to select player so computer will be a first player";
+}
+while (true)
+{
+    int currentMark = (player == 1) ? 'x' : 'o';
+
+    if (player == 2) // Human Being
+    {
+        cout << "\n Enter Next move = ";
+        cin >> nextMove;
+    }
+    else // Computer
+    {
+        nextMove = findBestNextMove(array);
+        cout << endl << " Computer chosen position = " << nextMove;
+    }
+    if (nextMove > 0 && nextMove < 10 && array[nextMove - 1] == 0)
+    {
+        array[nextMove - 1] = currentMark;
+        int winner = isAnyoneWinner(array);
+        if (winner > 0)
+        {
+            if (winner < 3)
+            {
+                cout << endl << " Winner is = " << winner;
+            }
+            else
+            {
+                cout << endl << endl << "*********** Match is drawn, It is a tie ******************";
+            }
+            //cin>> winner;
+            break;
+        }
+        player = (player == 2) ? 1 : 2;
+        DisplayBoard(array);
+    }
+    else
+    {
+        cout << endl << "You entered wrong move, please renter the value";
+    }
+}
+DisplayBoard(array);
+
+cout << endl << endl << "================== THANK YOU ============================ " << endl;
+return 0;
+}
+
+int findBestNextMove(int arr[])
+{
+int possibleWinningMoves[8][3] = { {0,4,8},{2,4,6},{0,3,6},{1,4,7},{2,5,8},{0,1,2},{3,4,5},{6,7,8} };
+int Winner = 0;
+int potentialWinningPos = -1;
+
+for (int counter = 0; counter < 2 && potentialWinningPos == -1; counter++)
+{
+    for (int outer = 0; outer < 8 && potentialWinningPos == -1; outer++)
+    {
+        int sum = 0;
+        for (int inner = 0; inner < 3; inner++)
+        {
+            sum += arr[possibleWinningMoves[outer][inner]];
+        }
+
+        if (sum == ((2 - counter) * 'x') || sum == ((2 - counter) * 'o')) //find if the computer is winning OR opponent is winning
+        {
+            for (int inner = 0; inner < 3; inner++)
+            {
+                if (arr[possibleWinningMoves[outer][inner]] == 0)
+                {
+                    potentialWinningPos = possibleWinningMoves[outer][inner] + 1;
+                    break;
+                }
+            }
+        }
+    }
+}
+
+if (potentialWinningPos == -1)//failed get position
+{
+    if (arr[4] == 0)
+    {
+        potentialWinningPos = 5;
+    }
+    else
+    {
+        cout << endl << "Your logic is failed, please relook";
+    }
+}
+return potentialWinningPos;
+}
+
+// A function to show the current board status
+void DisplayBoard(int arr[])
+{
+cout << endl << endl;
+cout << "| " << (char)arr[0] << " | " << (char)arr[1] << " | " << (char)arr[2] << " |" << endl;
+cout << "||" << endl;
+cout << "| " << (char)arr[3] << " | " << (char)arr[4] << " | " << (char)arr[5] << " |" << endl;
+cout << "||" << endl;
+cout << "| " << (char)arr[6] << " | " << (char)arr[7] << " | " << (char)arr[8] << " |" << endl;
+return;
+}
+
+int isAnyoneWinner(int arr[])
+{
+int WinningRowColumn[8];
+int Winner = 0;
+WinningRowColumn[0] = arr[0] + arr[3] + arr[6];
+WinningRowColumn[1] = arr[1] + arr[4] + arr[7];
+WinningRowColumn[2] = arr[2] + arr[5] + arr[8];
+
+WinningRowColumn[3] = arr[0] + arr[1] + arr[2];
+WinningRowColumn[4] = arr[3] + arr[4] + arr[5];
+WinningRowColumn[5] = arr[6] + arr[7] + arr[8];
+
+WinningRowColumn[6] = arr[0] + arr[4] + arr[8];
+WinningRowColumn[7] = arr[2] + arr[4] + arr[6];
+
+int i = 0;
+for (; i <= 8; i++)
+{
+    if (WinningRowColumn[i] == (3 * 'x'))
+    {
+        Winner = 1;
+        break;
+    }
+    else if (WinningRowColumn[i] == (3 * 'o'))
+    {
+        Winner = 2;
+        break;
+    }
+}
+if (i > 8 && Winner == 0)
+{
+    bool isPosAvailable = false;
+    for (i = 0; i <= 9; i++)
+    {
+        if (arr[i] == 0)
+        {
+            isPosAvailable = true;
+            break;
+        }
+    }
+    if (!isPosAvailable)
+    {
+        Winner = 3;// Draw
+    }
+}
+return Winner;
+}
